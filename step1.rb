@@ -13,19 +13,13 @@ class Game
             if s1 == s2
                 puts "#{player1.name}のカードは#{card1}です"
                 puts "#{player2.name}のカードは#{card2}です"
-                player1.score.shift()
-                player2.score.shift()
-                player1.deck.shift()
-                player2.deck.shift()
+                self.put_on_table(player1,player2)
                 @add_score.push(s1,s2)
                 @add_deck.push(card1,card2)
             elsif s1 > s2
                 puts "#{player1.name}のカードは#{card1}です"
                 puts "#{player2.name}のカードは#{card2}です"
-                player1.score.shift()
-                player2.score.shift()
-                player1.deck.shift()
-                player2.deck.shift()
+                self.put_on_table(player1,player2)
                 @add_score.push(s1,s2)
                 @add_deck.push(card1,card2)
                 puts "1の勝ちです"
@@ -33,16 +27,20 @@ class Game
             elsif s1 < s2
                 puts "#{player1.name}のカードは#{card1}です"
                 puts "#{player2.name}のカードは#{card2}です"
-                player1.score.shift()
-                player2.score.shift()
-                player1.deck.shift()
-                player2.deck.shift()
+                self.put_on_table(player1,player2)
                 @add_score.push(s1,s2)
                 @add_deck.push(card1,card2)
                 puts "2の勝ちです"
                 break
             end
         end
+    end
+
+    def put_on_table(player1,player2)
+        player1.score.shift()
+        player2.score.shift()
+        player1.deck.shift()
+        player2.deck.shift()
     end
 
     def last_screen
