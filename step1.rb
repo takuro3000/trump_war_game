@@ -59,18 +59,19 @@ class Deck
         ranks = ['A','2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', ]
 
         suits.each do |suit|
-        ranks.each do |rank|
-            @deck << "#{suit}の#{rank}"
-        end
+            ranks.each do |rank|
+                @deck << "#{suit}の#{rank}"
+            end
         end
 
-        @deck = @deck.shuffle
-        divided_number = 52/2
-        @deck = @deck.each_slice(divided_number).to_a
+        @deck.shuffle!
     end
 
-    def generate
-        @deck
+    def divide
+        total_number_of_playing_cards = 52
+        the_number_of_players = 2
+        divided_number = total_number_of_playing_cards/the_number_of_players
+        @deck = @deck.each_slice(divided_number).to_a
     end
 end
 
@@ -113,7 +114,7 @@ game = Game.new()
 deck = Deck.new()
 score1 = Score.new()
 score2 = Score.new()
-deck = deck.generate
+deck = deck.divide
 player1_deck = deck[0]
 player2_deck = deck[1]
 score1.change_to_score(player1_deck)
