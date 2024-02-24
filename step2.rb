@@ -37,25 +37,18 @@ class Game
             end
             if player1.score.length <= player2.score.length
                 player1.score.zip(player2.score,player1.deck,player2.deck).each do | s1 , s2 , card1 ,card2 |
+                    puts "戦争！"
+                    puts "#{player1.name}のカードは#{card1}です。"
+                    puts "#{player2.name}のカードは#{card2}です。"
+                    player1.score.shift()
+                    player2.score.shift()
+                    player1.deck.shift()
+                    player2.deck.shift()
                     if s1 == s2
-                        puts "戦争！"
-                        puts "#{player1.name}のカードは#{card1}です。"
-                        puts "#{player2.name}のカードは#{card2}です。"
-                        player1.score.shift()
-                        player2.score.shift()
-                        player1.deck.shift()
-                        player2.deck.shift()
                         @add_temporary_score.push(s1,s2)
                         @add_temporary_deck.push(card1,card2)
                         puts "引き分けです。"
                     elsif s1 > s2
-                        puts "戦争！"
-                        puts "#{player1.name}のカードは#{card1}です。"
-                        puts "#{player2.name}のカードは#{card2}です。"
-                        player1.score.shift()
-                        player2.score.shift()
-                        player1.deck.shift()
-                        player2.deck.shift()
                         @add_player1_score.push(s1,s2)
                         @add_player1_deck.push(card1,card2)
                         @add_player1_score.push(@add_temporary_score)
@@ -66,13 +59,6 @@ class Game
                         @add_temporary_score.clear
                         @add_temporary_deck.clear
                     elsif s1 < s2
-                        puts "戦争！"
-                        puts "#{player1.name}のカードは#{card1}です。"
-                        puts "#{player2.name}のカードは#{card2}です。"
-                        player1.score.shift()
-                        player2.score.shift()
-                        player1.deck.shift()
-                        player2.deck.shift()
                         @add_player2_score.push(s1,s2)
                         @add_player2_deck.push(card1,card2)
                         @add_player2_score.push(@add_temporary_score)
@@ -86,25 +72,18 @@ class Game
                 end
             elsif player1.score.length > player2.score.length
                 player2.score.zip(player1.score,player2.deck,player1.deck).each do | s2 , s1 , card2 ,card1 |
+                    puts "戦争！"
+                    puts "#{player1.name}のカードは#{card1}です。"
+                    puts "#{player2.name}のカードは#{card2}です。"
+                    player1.score.shift()
+                    player2.score.shift()
+                    player1.deck.shift()
+                    player2.deck.shift()
                     if s1 == s2
-                        puts "戦争！"
-                        puts "#{player1.name}のカードは#{card1}です。"
-                        puts "#{player2.name}のカードは#{card2}です。"
-                        player1.score.shift()
-                        player2.score.shift()
-                        player1.deck.shift()
-                        player2.deck.shift()
                         @add_temporary_score.push(s1,s2)
                         @add_temporary_deck.push(card1,card2)
                         puts "引き分けです。"
                     elsif s1 > s2
-                        puts "戦争！"
-                        puts "#{player1.name}のカードは#{card1}です。"
-                        puts "#{player2.name}のカードは#{card2}です。"
-                        player1.score.shift()
-                        player2.score.shift()
-                        player1.deck.shift()
-                        player2.deck.shift()
                         @add_player1_score.push(s1,s2)
                         @add_player1_deck.push(card1,card2)
                         @add_player1_score.push(@add_temporary_score)
@@ -115,13 +94,6 @@ class Game
                         @add_temporary_score.clear
                         @add_temporary_deck.clear
                     elsif s1 < s2
-                        puts "戦争！"
-                        puts "#{player1.name}のカードは#{card1}です。"
-                        puts "#{player2.name}のカードは#{card2}です。"
-                        player1.score.shift()
-                        player2.score.shift()
-                        player1.deck.shift()
-                        player2.deck.shift()
                         @add_player2_score.push(s1,s2)
                         @add_player2_deck.push(card1,card2)
                         @add_player2_score.push(@add_temporary_score)
