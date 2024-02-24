@@ -2,10 +2,6 @@ class Game
     def initialize
         @add_temporary_score = []
         @add_temporary_deck = []
-        @add_player1_deck = []
-        @add_player2_deck = []
-        @add_player1_score = []
-        @add_player2_score = []
         @shuffled_arrays = []
     end
     def start_screen
@@ -14,26 +10,12 @@ class Game
     end
 
     def battle(player1,player2)
-        until (player1.score.length == 0 && @add_player1_score.length == 0) || (player2.score.length == 0 && @add_player2_score.length == 0) do
+        until (player1.score.length == 0 && player1.add_score.length == 0) || (player2.score.length == 0 && player2.add_score.length == 0) do
             if player1.score.length == 0
-                player1.score += @add_player1_score
-                player1.deck += @add_player1_deck
-                @shuffled_arrays = player1.score.zip(player1.deck).shuffle.transpose
-                player1.score = @shuffled_arrays[0]
-                player1.deck = @shuffled_arrays[1]
-                @shuffled_arrays.clear
-                @add_player1_score.clear
-                @add_player1_deck.clear
+                self.refill(player1)
             end
             if player2.score.length == 0
-                player2.score += @add_player2_score
-                player2.deck += @add_player2_deck
-                @shuffled_arrays = player2.score.zip(player2.deck).shuffle.transpose
-                player2.score = @shuffled_arrays[0]
-                player2.deck = @shuffled_arrays[1]
-                @shuffled_arrays.clear
-                @add_player2_score.clear
-                @add_player2_deck.clear
+                self.refill(player2)
             end
             if player1.score.length <= player2.score.length
                 player1.score.zip(player2.score,player1.deck,player2.deck).each do | s1 , s2 , card1 ,card2 |
@@ -46,9 +28,9 @@ class Game
                     if s1 == s2
                         puts "引き分けです。"
                     elsif s1 > s2
-                        self.win_player1(player1)
+                        self.win(player1)
                     elsif s1 < s2
-                        self.win_player2(player2)
+                        self.win(player2)
                     end
                 end
             elsif player1.score.length > player2.score.length
@@ -62,13 +44,24 @@ class Game
                     if s1 == s2
                         puts "引き分けです。"
                     elsif s1 > s2
-                        self.win_player1(player1)
+                        self.win(player1)
                     elsif s1 < s2
-                        self.win_player2(player2)
+                        self.win(player2)
                     end
                 end
             end
         end
+    end
+    
+    def refill(player)
+        player.score += player.add_score
+        player.deck += player.add_deck
+        @shuffled_arrays = player.score.zip(player.deck).shuffle.transpose
+        player.score = @shuffled_arrays[0]
+        player.deck = @shuffled_arrays[1]
+        @shuffled_arrays.clear
+        player.add_score.clear
+        player.add_deck.clear
     end
 
     def put_on_table(player1,player2)
@@ -78,34 +71,24 @@ class Game
         player2.deck.shift()
     end
 
-    def win_player1(player1)
-        @add_player1_score.push(@add_temporary_score)
-        @add_player1_score.flatten!
-        @add_player1_deck.push(@add_temporary_deck)
-        @add_player1_deck.flatten!
-        puts "#{player1.name}が勝ちました。#{player1.name}はカードを#{@add_temporary_score.length}枚もらいました。"
+    def win(player)
+        player.add_score.push(@add_temporary_score)
+        player.add_score.flatten!
+        player.add_deck.push(@add_temporary_deck)
+        player.add_deck.flatten!
+        puts "#{player.name}が勝ちました。#{player.name}はカードを#{@add_temporary_score.length}枚もらいました。"
         @add_temporary_score.clear
         @add_temporary_deck.clear
     end
 
-    def win_player2(player2)
-        @add_player2_score.push(@add_temporary_score)
-        @add_player2_score.flatten!
-        @add_player2_deck.push(@add_temporary_deck)
-        @add_player2_deck.flatten!
-        puts "#{player2.name}が勝ちました。#{player2.name}はカードを#{@add_temporary_score.length}枚もらいました。"
-        @add_temporary_score.clear
-        @add_temporary_deck.clear 
-    end
-
     def judge(player1,player2)    
-        if player1.score.length == 0 && @add_player1_score.length == 0
+        if player1.score.length == 0 && player1.add_score.length == 0
             puts "#{player1.name}の手札がなくなりました。"
-            puts "#{player2.name}の手札の枚数は#{player2.score.length+@add_player2_score.length}枚です。#{player1.name}の手札の枚数は#{player1.score.length+@add_player1_score.length}です。"
+            puts "#{player2.name}の手札の枚数は#{player2.score.length+player2.add_score.length}枚です。#{player1.name}の手札の枚数は#{player1.score.length+player1.add_score.length}です。"
             puts "#{player2.name}が1位、#{player1.name}が2位です。"
-        elsif player2.score.length == 0 && @add_player2_score.length == 0
+        elsif player2.score.length == 0 && player2.add_score.length == 0
             puts "#{player2.name}の手札がなくなりました。"
-            puts "#{player1.name}の手札の枚数は#{player1.score.length+@add_player1_score.length}枚です。#{player2.name}の手札の枚数は#{player2.score.length+@add_player2_score.length}です。"
+            puts "#{player1.name}の手札の枚数は#{player1.score.length+player1.add_score.length}枚です。#{player2.name}の手札の枚数は#{player2.score.length+player2.add_score.length}です。"
             puts "#{player1.name}が1位、#{player2.name}が2位です。"
         end
     end
@@ -169,6 +152,16 @@ class Player
         @name = name
         @deck = deck
         @score = score
+        @add_player_deck = []
+        @add_player_score = []
+    end
+
+    def add_score
+        @add_player_score
+    end
+
+    def add_deck
+        @add_player_deck
     end
 end
 
