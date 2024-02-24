@@ -44,28 +44,24 @@ class Game
                     player2.score.shift()
                     player1.deck.shift()
                     player2.deck.shift()
+                    @add_temporary_score.push(s1,s2)
+                    @add_temporary_deck.push(card1,card2)
                     if s1 == s2
-                        @add_temporary_score.push(s1,s2)
-                        @add_temporary_deck.push(card1,card2)
                         puts "引き分けです。"
                     elsif s1 > s2
-                        @add_player1_score.push(s1,s2)
-                        @add_player1_deck.push(card1,card2)
                         @add_player1_score.push(@add_temporary_score)
                         @add_player1_score.flatten!
                         @add_player1_deck.push(@add_temporary_deck)
                         @add_player1_deck.flatten!
-                        puts "#{player1.name}が勝ちました。#{player1.name}はカードを#{2+@add_temporary_score.length}枚もらいました。"
+                        puts "#{player1.name}が勝ちました。#{player1.name}はカードを#{@add_temporary_score.length}枚もらいました。"
                         @add_temporary_score.clear
                         @add_temporary_deck.clear
                     elsif s1 < s2
-                        @add_player2_score.push(s1,s2)
-                        @add_player2_deck.push(card1,card2)
                         @add_player2_score.push(@add_temporary_score)
                         @add_player2_score.flatten!
                         @add_player2_deck.push(@add_temporary_deck)
                         @add_player2_deck.flatten!
-                        puts "#{player2.name}が勝ちました。#{player2.name}はカードを#{2+@add_temporary_score.length}枚もらいました。"
+                        puts "#{player2.name}が勝ちました。#{player2.name}はカードを#{@add_temporary_score.length}枚もらいました。"
                         @add_temporary_score.clear
                         @add_temporary_deck.clear
                     end
@@ -79,28 +75,24 @@ class Game
                     player2.score.shift()
                     player1.deck.shift()
                     player2.deck.shift()
+                    @add_temporary_score.push(s1,s2)
+                    @add_temporary_deck.push(card1,card2)
                     if s1 == s2
-                        @add_temporary_score.push(s1,s2)
-                        @add_temporary_deck.push(card1,card2)
                         puts "引き分けです。"
                     elsif s1 > s2
-                        @add_player1_score.push(s1,s2)
-                        @add_player1_deck.push(card1,card2)
                         @add_player1_score.push(@add_temporary_score)
                         @add_player1_score.flatten!
                         @add_player1_deck.push(@add_temporary_deck)
                         @add_player1_deck.flatten!
-                        puts "#{player1.name}が勝ちました。#{player1.name}はカードを#{2+@add_temporary_score.length}枚もらいました。"
+                        puts "#{player1.name}が勝ちました。#{player1.name}はカードを#{@add_temporary_score.length}枚もらいました。"
                         @add_temporary_score.clear
                         @add_temporary_deck.clear
                     elsif s1 < s2
-                        @add_player2_score.push(s1,s2)
-                        @add_player2_deck.push(card1,card2)
                         @add_player2_score.push(@add_temporary_score)
                         @add_player2_score.flatten!
                         @add_player2_deck.push(@add_temporary_deck)
                         @add_player2_deck.flatten!
-                        puts "#{player2.name}が勝ちました。#{player2.name}はカードを#{2+@add_temporary_score.length}枚もらいました。"
+                        puts "#{player2.name}が勝ちました。#{player2.name}はカードを#{@add_temporary_score.length}枚もらいました。"
                         @add_temporary_score.clear
                         @add_temporary_deck.clear
                     end
