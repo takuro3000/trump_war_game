@@ -10,30 +10,18 @@ class Game
 
     def judge(player1,player2)
         player1.score.zip(player2.score,player1.deck,player2.deck).each do | s1 , s2 , card1 ,card2 |
+            puts "戦争！"
+            puts "#{player1.name}のカードは#{card1}です。"
+            puts "#{player2.name}のカードは#{card2}です。"
+            self.put_on_table(player1,player2)
+            @add_score.push(s1,s2)
+            @add_deck.push(card1,card2)
             if s1 == s2
-                puts "戦争！"
-                puts "#{player1.name}のカードは#{card1}です。"
-                puts "#{player2.name}のカードは#{card2}です。"
-                self.put_on_table(player1,player2)
-                @add_score.push(s1,s2)
-                @add_deck.push(card1,card2)
                 puts "引き分けです。"
             elsif s1 > s2
-                puts "戦争！"
-                puts "#{player1.name}のカードは#{card1}です。"
-                puts "#{player2.name}のカードは#{card2}です。"
-                self.put_on_table(player1,player2)
-                @add_score.push(s1,s2)
-                @add_deck.push(card1,card2)
                 puts "#{player1.name}が勝ちました。"
                 break
             elsif s1 < s2
-                puts "戦争！"
-                puts "#{player1.name}のカードは#{card1}です。"
-                puts "#{player2.name}のカードは#{card2}です。"
-                self.put_on_table(player1,player2)
-                @add_score.push(s1,s2)
-                @add_deck.push(card1,card2)
                 puts "#{player2.name}が勝ちました。"
                 break
             end
