@@ -13,7 +13,7 @@ class Game
         puts "カードが配られました。"
     end
 
-    def judge(player1,player2)
+    def battle(player1,player2)
         until (player1.score.length == 0 && @add_player1_score.length == 0) || (player2.score.length == 0 && @add_player2_score.length == 0) do
             if player1.score.length == 0
                 player1.score += @add_player1_score
@@ -135,7 +135,9 @@ class Game
                 end
             end
         end
+    end
 
+    def judge(player1,player2)    
         if player1.score.length == 0 && @add_player1_score.length == 0
             puts "#{player1.name}の手札がなくなりました。"
             puts "#{player2.name}の手札の枚数は#{player2.score.length+@add_player2_score.length}枚です。#{player1.name}の手札の枚数は#{player1.score.length+@add_player1_score.length}です。"
@@ -223,5 +225,6 @@ player2_score = score2.generate
 player1 = Player.new("プレイヤー1",player1_deck,player1_score)
 player2 = Player.new("プレイヤー2",player2_deck,player2_score)
 game.start_screen
+game.battle(player1,player2)
 game.judge(player1,player2)
 game.last_screen
