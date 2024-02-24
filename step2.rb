@@ -81,8 +81,10 @@ class Game
         @add_temporary_deck.clear
     end
 
-    def judge(player1,player2)    
-        if player1.score.length == 0 && player1.add_score.length == 0
+    def judge(player1,player2)
+        if (player1.score.length == 0 && player1.add_score.length == 0) && (player2.score.length == 0 && player2.add_score.length == 0)
+            puts "両者カードが無くなり、引き分けです"  
+        elsif player1.score.length == 0 && player1.add_score.length == 0
             puts "#{player1.name}の手札がなくなりました。"
             puts "#{player2.name}の手札の枚数は#{player2.score.length+player2.add_score.length}枚です。#{player1.name}の手札の枚数は#{player1.score.length+player1.add_score.length}です。"
             puts "#{player2.name}が1位、#{player1.name}が2位です。"
