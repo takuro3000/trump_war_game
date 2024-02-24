@@ -10,43 +10,33 @@ class Game
 
     def judge(player1,player2)
         player1.score.zip(player2.score,player1.deck,player2.deck).each do | s1 , s2 , card1 ,card2 |
+            puts "戦争！"
+            puts "#{player1.name}のカードは#{card1}です。"
+            puts "#{player2.name}のカードは#{card2}です。"
+            self.put_on_table(player1,player2)
+            @add_score.push(s1,s2)
+            @add_deck.push(card1,card2)
             if s1 == s2
-                puts "#{player1.name}のカードは#{card1}です"
-                puts "#{player2.name}のカードは#{card2}です"
-                player1.score.shift()
-                player2.score.shift()
-                player1.deck.shift()
-                player2.deck.shift()
-                @add_score.push(s1,s2)
-                @add_deck.push(card1,card2)
+                puts "引き分けです。"
             elsif s1 > s2
-                puts "#{player1.name}のカードは#{card1}です"
-                puts "#{player2.name}のカードは#{card2}です"
-                player1.score.shift()
-                player2.score.shift()
-                player1.deck.shift()
-                player2.deck.shift()
-                @add_score.push(s1,s2)
-                @add_deck.push(card1,card2)
-                puts "1の勝ちです"
+                puts "#{player1.name}が勝ちました。"
                 break
             elsif s1 < s2
-                puts "#{player1.name}のカードは#{card1}です"
-                puts "#{player2.name}のカードは#{card2}です"
-                player1.score.shift()
-                player2.score.shift()
-                player1.deck.shift()
-                player2.deck.shift()
-                @add_score.push(s1,s2)
-                @add_deck.push(card1,card2)
-                puts "2の勝ちです"
+                puts "#{player2.name}が勝ちました。"
                 break
             end
         end
     end
 
+    def put_on_table(player1,player2)
+        player1.score.shift()
+        player2.score.shift()
+        player1.deck.shift()
+        player2.deck.shift()
+    end
+
     def last_screen
-        puts "戦争を終了します"
+        puts "戦争を終了します。"
     end
 end
 
@@ -57,18 +47,19 @@ class Deck
         ranks = ['A','2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', ]
 
         suits.each do |suit|
-        ranks.each do |rank|
-            @deck << "#{suit}の#{rank}"
-        end
+            ranks.each do |rank|
+                @deck << "#{suit}の#{rank}"
+            end
         end
 
-        @deck = @deck.shuffle
-        divided_number = 52/2
-        @deck = @deck.each_slice(divided_number).to_a
+        @deck.shuffle!
     end
 
-    def generate
-        @deck
+    def divide
+        total_number_of_playing_cards = 52
+        the_number_of_players = 2
+        divided_number = total_number_of_playing_cards/the_number_of_players
+        @deck = @deck.each_slice(divided_number).to_a
     end
 end
 
@@ -93,9 +84,6 @@ class Score
             end
         end
     end
-    def generate
-        @score
-    end
 end
 
 class Player
@@ -111,13 +99,11 @@ game = Game.new()
 deck = Deck.new()
 score1 = Score.new()
 score2 = Score.new()
-deck = deck.generate
+deck = deck.divide
 player1_deck = deck[0]
 player2_deck = deck[1]
-score1.change_to_score(player1_deck)
-player1_score = score1.generate
-score2.change_to_score(player2_deck)
-player2_score = score2.generate
+player1_score = score1.change_to_score(player1_deck)
+player2_score = score2.change_to_score(player2_deck)
 player1 = Player.new("プレイヤー1",player1_deck,player1_score)
 player2 = Player.new("プレイヤー2",player2_deck,player2_score)
 game.start_screen
