@@ -84,6 +84,9 @@ class Score
             end
         end
     end
+    def generate
+        @score
+    end
 end
 
 class Player
@@ -102,8 +105,10 @@ score2 = Score.new()
 deck = deck.divide
 player1_deck = deck[0]
 player2_deck = deck[1]
-player1_score = score1.change_to_score(player1_deck)
-player2_score = score2.change_to_score(player2_deck)
+score1.change_to_score(player1_deck)
+score2.change_to_score(player2_deck)
+player1_score = score1.generate
+player2_score = score2.generate
 player1 = Player.new("プレイヤー1",player1_deck,player1_score)
 player2 = Player.new("プレイヤー2",player2_deck,player2_score)
 game.start_screen
