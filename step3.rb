@@ -44,29 +44,10 @@ class Game
         @player_score_short = Array.new(@the_number_of_players) { [] }
         @player_deck_short = Array.new(@the_number_of_players) { [] }
         until [player.score,@player_add_score].transpose.any? {|s,ps| s.empty? && ps.empty?} do
-            for i in 0..(@the_number_of_players-1) do
-                player.score[i].push(@player_add_score[i].dup)
-                player.score[i].flatten!
-                @player_add_score[i].clear
-                player.deck[i].push(@player_add_deck[i].dup)
-                player.deck[i].flatten!
-                @player_add_deck[i].clear
-            end
-
-            for i in 0..(@the_number_of_players-1) do
-                @length_array  << player.score[i].length
-            end
-
-            minimum_array_length = @length_array.min
-
-            for i in 0..(@the_number_of_players-1) do
-                @player_score_short[i] = player.score[i].slice!(0,minimum_array_length)
-                @player_deck_short[i] = player.deck[i].slice!(0,minimum_array_length)
-            end
-
+            self.refill(player)
+            self.divide_minimum_length(player)
             player_score_short_transpose = @player_score_short.transpose
             player_deck_short_transpose = @player_deck_short.transpose
-
             player_score_short_transpose.zip(player_deck_short_transpose).each do |i,m|
                 max_array = i.select{|n| n == i.max}
                 if max_array.length != 1
@@ -95,44 +76,71 @@ class Game
                     end
                 end
             end
-
-            for i in 0..(@the_number_of_players-1) do
-                @player_add_score[i].flatten!
-                @player_add_deck[i].flatten!
-                shuffled_arrays = @player_add_score[i].zip(@player_add_deck[i]).shuffle.transpose
-                @player_add_score[i] = shuffled_arrays[0]
-                @player_add_deck[i] = shuffled_arrays[1]
-            end
-
-            @player_add_score.map! { |element| element.nil? ? [] : element }
-            @player_add_deck.map! { |element| element.nil? ? [] : element }
+            self.shuffle
+            self.remove_nil
         end
     end
 
+    def refill(player)
+        for i in 0..(@the_number_of_players-1) do
+            player.score[i].push(@player_add_score[i].dup)
+            player.score[i].flatten!
+            @player_add_score[i].clear
+            player.deck[i].push(@player_add_deck[i].dup)
+            player.deck[i].flatten!
+            @player_add_deck[i].clear
+        end
+    end
+
+    def divide_minimum_length(player)
+        for i in 0..(@the_number_of_players-1) do
+            @length_array  << player.score[i].length
+        end
+
+        for i in 0..(@the_number_of_players-1) do
+            @player_score_short[i] = player.score[i].slice!(0,@length_array.min)
+            @player_deck_short[i] = player.deck[i].slice!(0,@length_array.min)
+        end
+    end
+
+    def shuffle
+        for i in 0..(@the_number_of_players-1) do
+            @player_add_score[i].flatten!
+            @player_add_deck[i].flatten!
+            shuffled_arrays = @player_add_score[i].zip(@player_add_deck[i]).shuffle.transpose
+            @player_add_score[i] = shuffled_arrays[0]
+            @player_add_deck[i] = shuffled_arrays[1]
+        end
+    end
+
+    def remove_nil
+        @player_add_score.map! { |element| element.nil? ? [] : element }
+        @player_add_deck.map! { |element| element.nil? ? [] : element }
+    end
+
     def judge(player)
+        self.show_player_card_number(player)
+        self.show_rank(player)
+    end
+
+    def show_player_card_number(player)
         for i in 0..(@the_number_of_players-1) do
             @result_player_deck_length << player.score[i].length + @player_add_score[i].length
         end
-
         minimum_player = @result_player_deck_length.index(@result_player_deck_length.min)
-
         puts "#{player.name[minimum_player]}の手札がなくなりました。"
-
         @result_player_deck_length.zip(player.name).each do | r , name |
             print "#{name}の手札の枚数は#{r}枚です。"
         end
-
         puts ""
+    end
 
+    def show_rank(player)
         name_and_length_transpose = [player.name,@result_player_deck_length].transpose
         hash = Hash[*name_and_length_transpose.flatten]
-
         hash_descending_order = hash.sort_by{ | k, v | v }.reverse.to_h
-
         names_order = hash_descending_order.keys.map {|e| e.to_s }
-
         result_deck_descending_order = @result_player_deck_length.sort.reverse
-
         for i in 1..@the_number_of_players do
             print "#{names_order[i-1]}が#{i-result_deck_descending_order.slice(0,i-1).count(result_deck_descending_order[i-1])}位"
             if i != @the_number_of_players
@@ -142,6 +150,7 @@ class Game
             end
         end
     end
+
     def last_screen
         puts ""
         puts "戦争を終了します。"
