@@ -44,19 +44,19 @@ end
 
 score = the_number_of_players.times.map{|i| score[score.length*i/the_number_of_players...score.size*(i+1)/the_number_of_players]}
 
-c = Array.new(the_number_of_players) { [] }
-d = Array.new(the_number_of_players) { [] }
-add_c = []
-add_d = []
+player_add_score = Array.new(the_number_of_players) { [] }
+player_add_deck = Array.new(the_number_of_players) { [] }
+temporary_score = []
+temporary_deck = []
 
-until [score,c].transpose.any? {|s,cc| s.empty? && cc.empty?} do
+until [score,player_add_score].transpose.any? {|s,ps| s.empty? && ps.empty?} do
     for i in 0..(the_number_of_players-1) do
-        score[i].push(c[i].dup)
+        score[i].push(player_add_score[i].dup)
         score[i].flatten!
-        c[i].clear
-        deck[i].push(d[i].dup)
+        player_add_score[i].clear
+        deck[i].push(player_add_deck[i].dup)
         deck[i].flatten!
-        d[i].clear
+        player_add_deck[i].clear
     end
 
     length_array = []
@@ -67,18 +67,18 @@ until [score,c].transpose.any? {|s,cc| s.empty? && cc.empty?} do
 
     minimum_array_length = length_array.min
 
-    c_new = Array.new(the_number_of_players) { [] }
-    d_new = Array.new(the_number_of_players) { [] }
+    player_score_short = Array.new(the_number_of_players) { [] }
+    player_deck_short = Array.new(the_number_of_players) { [] }
 
     for i in 0..(the_number_of_players-1) do
-        c_new[i] = score[i].slice!(0,minimum_array_length)
-        d_new[i] = deck[i].slice!(0,minimum_array_length)
+        player_score_short[i] = score[i].slice!(0,minimum_array_length)
+        player_deck_short[i] = deck[i].slice!(0,minimum_array_length)
     end
 
-    c_temporary = c_new.transpose
-    d_temporary = d_new.transpose
+    player_score_short_transpose = player_score_short.transpose
+    player_deck_short_transpose = player_deck_short.transpose
 
-    c_temporary.zip(d_temporary).each do |i,m|
+    player_score_short_transpose.zip(player_deck_short_transpose).each do |i,m|
         max_array = i.select{|n| n == i.max}
         if max_array.length != 1
             puts "戦争！"
@@ -86,65 +86,63 @@ until [score,c].transpose.any? {|s,cc| s.empty? && cc.empty?} do
                 puts "#{pp}のカードは#{mm}です。"
             end
             puts "引き分けです。"
-            add_c << i
-            add_d << m
+            temporary_score << i
+            temporary_deck << m
         else
             for num in 0..(i.length-1) do
                 if i.max == i[num]
                     puts "戦争！"
-                    c[num] << add_c.dup
-                    add_c.clear
-                    c[num] << i
+                    player_add_score[num] << temporary_score.dup
+                    temporary_score.clear
+                    player_add_score[num] << i
                     m.zip(players_name).each do | mm , pp |
                         puts "#{pp}のカードは#{mm}です。"
                     end
-                    puts "#{players_name[num]}が勝ちました。#{players_name[num]}はカードを#{the_number_of_players+add_d.flatten.length}枚もらいました。"
-                    d[num] << add_d.dup
-                    add_d.clear
-                    d[num] << m
+                    puts "#{players_name[num]}が勝ちました。#{players_name[num]}はカードを#{the_number_of_players+temporary_deck.flatten.length}枚もらいました。"
+                    player_add_deck[num] << temporary_deck.dup
+                    temporary_deck.clear
+                    player_add_deck[num] << m
                 end
             end
         end
     end
 
     for i in 0..(the_number_of_players-1) do
-        c[i].flatten!
-        d[i].flatten!
-        shuffled_arrays = c[i].zip(d[i]).shuffle.transpose
-        c[i] = shuffled_arrays[0]
-        d[i] = shuffled_arrays[1]
+        player_add_score[i].flatten!
+        player_add_deck[i].flatten!
+        shuffled_arrays = player_add_score[i].zip(player_add_deck[i]).shuffle.transpose
+        player_add_score[i] = shuffled_arrays[0]
+        player_add_deck[i] = shuffled_arrays[1]
     end
 
-    c.map! { |element| element.nil? ? [] : element }
-    d.map! { |element| element.nil? ? [] : element }
+    player_add_score.map! { |element| element.nil? ? [] : element }
+    player_add_deck.map! { |element| element.nil? ? [] : element }
 end
 
-result_deck_size = []
+result_player_deck_length = []
 
 for i in 0..(the_number_of_players-1) do
-    result_deck_size << score[i].length + c[i].length
+    result_player_deck_length << score[i].length + player_add_score[i].length
 end
 
-minimum_player = result_deck_size.index(result_deck_size.min)
+minimum_player = result_player_deck_length.index(result_player_deck_length.min)
 
 puts "#{players_name[minimum_player]}の手札がなくなりました。"
 
-result_deck_size.zip(players_name).each do | r , name |
+result_player_deck_length.zip(players_name).each do | r , name |
     print "#{name}の手札の枚数は#{r}枚です。"
 end
 
 puts ""
 
-hash_before = [players_name,result_deck_size].transpose
+hash_before = [players_name,result_player_deck_length].transpose
 hash = Hash[*hash_before.flatten]
 
 hash_change = hash.sort_by{ | k, v | v }.reverse.to_h
 
 order_names = hash_change.keys.map {|e| e.to_s }
 
-order_deck = result_deck_size.sort.reverse
-
-
+order_deck = result_player_deck_length.sort.reverse
 
 for i in 1..the_number_of_players do
     print "#{order_names[i-1]}が#{i-order_deck.slice(0,i-1).count(order_deck[i-1])}位"
@@ -157,5 +155,3 @@ end
 
 puts ""
 puts "戦争を終了します。"
-
-
