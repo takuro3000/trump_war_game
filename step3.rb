@@ -135,17 +135,17 @@ end
 
 puts ""
 
-hash_before = [players_name,result_player_deck_length].transpose
-hash = Hash[*hash_before.flatten]
+name_and_length_transpose = [players_name,result_player_deck_length].transpose
+hash = Hash[*name_and_length_transpose.flatten]
 
-hash_change = hash.sort_by{ | k, v | v }.reverse.to_h
+hash_descending_order = hash.sort_by{ | k, v | v }.reverse.to_h
 
-order_names = hash_change.keys.map {|e| e.to_s }
+names_order = hash_descending_order.keys.map {|e| e.to_s }
 
-order_deck = result_player_deck_length.sort.reverse
+result_deck_descending_order = result_player_deck_length.sort.reverse
 
 for i in 1..the_number_of_players do
-    print "#{order_names[i-1]}が#{i-order_deck.slice(0,i-1).count(order_deck[i-1])}位"
+    print "#{names_order[i-1]}が#{i-result_deck_descending_order.slice(0,i-1).count(result_deck_descending_order[i-1])}位"
     if i != the_number_of_players
         print "、"
     elsif i == the_number_of_players
